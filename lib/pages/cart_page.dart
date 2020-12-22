@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/widgets/drawer.dart';
+import 'package:shop_app/widgets/app_drawer.dart';
 
 import '../providers/cart.dart';
 import '../providers/orders.dart';
 import '../widgets/cart_product.dart';
-import '../widgets/drawer.dart';
+import '../widgets/app_drawer.dart';
 
 class CartPage extends StatelessWidget {
   static const routeName = '/cart';
@@ -45,17 +45,7 @@ class CartPage extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  FlatButton(
-                    child: Text('order now'),
-                    textColor: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrders(
-                        cartData.totalAmount,
-                        cartData.items.values.toList(),
-                      );
-                      cartData.clear();
-                    },
-                  ),
+                  OrderButton(cartData: cartData),
                 ],
               ),
             ),
@@ -77,6 +67,44 @@ class CartPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key key,
+    @required this.cartData,
+  }) : super(key: key);
+
+  final Cart cartData;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      child: _isLoading ? CircularProgressIndicator() : Text('order now'),
+      textColor: Theme.of(context).primaryColor,
+      onPressed: (widget.cartData.totalAmount <= 0 || _isLoading)
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await Provider.of<Orders>(context, listen: false).addOrders(
+                widget.cartData.totalAmount,
+                widget.cartData.items.values.toList(),
+              );
+              setState(() {
+                _isLoading = false;
+              });
+              widget.cartData.clear();
+            },
     );
   }
 }

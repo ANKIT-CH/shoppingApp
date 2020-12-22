@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import '../main.dart';
 import '../pages/orders_page.dart';
 import '../pages/user_products_page.dart';
 
@@ -21,8 +20,8 @@ class AppDrawer extends StatelessWidget {
         ),
         Divider(),
         ListTile(
-          title: Text('shop'),
-          leading: Icon(Icons.shop),
+          title: Text('orders'),
+          leading: Icon(Icons.payment),
           onTap: () {
             Navigator.of(context).pushNamed(OrdersPage.routeName);
           },

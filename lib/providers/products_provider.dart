@@ -60,6 +60,9 @@ class Products with ChangeNotifier {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
+
+      if (extractedData == null) return;
+
       extractedData.forEach((prodId, product) {
         loadedProducts.add(Product(
           id: prodId,
@@ -75,6 +78,7 @@ class Products with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+    notifyListeners();
   }
 
   Future<void> addProduct(Product product) async {

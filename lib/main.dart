@@ -12,6 +12,7 @@ import './providers/orders.dart';
 import 'pages/orders_page.dart';
 import './pages/user_products_page.dart';
 import './pages/edit_products_page.dart';
+import './pages/auth_page.dart';
 
 void main() {
   runApp(MyApp());

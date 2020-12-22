@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/widgets/app_drawer.dart';
 
 import '../widgets/Products_grid.dart';
 import '../widgets/badge.dart';
@@ -47,7 +48,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('produtcts'),
+        title: Text('MyShop'),
         actions: <Widget>[
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
@@ -87,6 +88,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           ),
         ],
       ),
+      drawer: AppDrawer(),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : ProductsGrid(_onlyFavourites),

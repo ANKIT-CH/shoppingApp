@@ -58,15 +58,6 @@ class _EditProductsPageState extends State<EditProductsPage> {
     super.didChangeDependencies();
   }
 
-  @override
-  void dispose() {
-    _imageUrlFocusController.removeListener(_updateImageUrl);
-    _priceFocusNode.dispose();
-    _descriptionFocusNode.dispose();
-    _descriptionFocusNode.dispose();
-    super.dispose();
-  }
-
   void _updateImageUrl() {
     if (!_imageUrlFocusController.hasFocus) {
       if (_imageUrlController.text.isEmpty) return;
@@ -77,6 +68,16 @@ class _EditProductsPageState extends State<EditProductsPage> {
           !_imageUrlController.text.endsWith('.jpeg')) return;
       setState(() {});
     }
+  }
+
+  @override
+  void dispose() {
+    _imageUrlFocusController.removeListener(_updateImageUrl);
+    _priceFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+    _imageUrlController.dispose();
+    _imageUrlFocusController.dispose();
+    super.dispose();
   }
 
   Future<void> _saveForm() async {
@@ -217,6 +218,7 @@ class _EditProductsPageState extends State<EditProductsPage> {
                       keyboardType: TextInputType.multiline,
                       // textInputAction: TextInputAction.next,
                       // focusNode: _priceFocusNode,
+                      focusNode: _descriptionFocusNode,
                       validator: (value) {
                         if (value.isEmpty) return ('provide a descriptiom');
                         if (value.length <= 10)
