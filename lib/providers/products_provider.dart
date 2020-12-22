@@ -41,6 +41,9 @@ class Products with ChangeNotifier {
     // ),
   ];
 
+  final token;
+  Products(this.token, this._items);
+
   List<Product> get favouriteItems {
     return _items.where((element) => element.isFavourite == true).toList();
   }
@@ -54,9 +57,9 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndAddProducts() async {
+    final url =
+        'https://flutter-app-53158-default-rtdb.firebaseio.com/products.json?auth=$token';
     try {
-      final url =
-          'https://flutter-app-53158-default-rtdb.firebaseio.com/products.json';
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
@@ -66,11 +69,11 @@ class Products with ChangeNotifier {
       extractedData.forEach((prodId, product) {
         loadedProducts.add(Product(
           id: prodId,
-          title: product.title,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          isFavourite: product.isFavourite,
+          title: product['title'],
+          description: product['description'],
+          price: product['price'],
+          imageUrl: product['imageUrl'],
+          isFavourite: product['isFavourite'],
         ));
       });
       _items = loadedProducts;
@@ -78,12 +81,12 @@ class Products with ChangeNotifier {
     } catch (error) {
       throw error;
     }
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> addProduct(Product product) async {
     final url =
-        'https://flutter-app-53158-default-rtdb.firebaseio.com/products.json';
+        'https://flutter-app-53158-default-rtdb.firebaseio.com/products.json?auth=$token';
     try {
       final response = await http.post(
         url,
@@ -117,7 +120,7 @@ class Products with ChangeNotifier {
 
     if (productId >= 0) {
       final url =
-          'https://flutter-app-53158-default-rtdb.firebaseio.com/products/$id.json';
+          'https://flutter-app-53158-default-rtdb.firebaseio.com/products/$id.json?auth=$token';
 
       await http.patch(url,
           body: json.encode(
@@ -140,7 +143,7 @@ class Products with ChangeNotifier {
     var existingProduct = _items[existingProductId];
 
     final url =
-        'https://flutter-app-53158-default-rtdb.firebaseio.com/products/$id.json';
+        'https://flutter-app-53158-default-rtdb.firebaseio.com/products/$id.json?auth=$token';
 
     _items.removeAt(existingProductId);
     notifyListeners();

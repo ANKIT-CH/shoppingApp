@@ -20,24 +20,23 @@ class OrdersPage extends StatelessWidget {
               Provider.of<Orders>(context, listen: false).fetchAndAddOrders(),
           builder: (ctx, snapShot) {
             if (snapShot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return Center(child: CircularProgressIndicator());
             } else {
               if (snapShot.error != null) {
                 //error handling
                 return Center(
                   child: Text('An Error occured'),
                 );
+              } else {
+                return Consumer<Orders>(
+                  builder: (ctx, ordersData, child) => ListView.builder(
+                    itemCount: ordersData.orders.length,
+                    itemBuilder: (ctx, index) =>
+                        OrderItem(ordersData.orders[index]),
+                  ),
+                );
               }
             }
-            return Consumer<Orders>(
-              builder: (ctx, ordersData, child) => ListView.builder(
-                itemCount: ordersData.orders.length,
-                itemBuilder: (ctx, index) =>
-                    OrderItem(ordersData.orders[index]),
-              ),
-            );
           }),
     );
   }

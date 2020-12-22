@@ -48,8 +48,14 @@ class _EditProductsPageState extends State<EditProductsPage> {
         _initValues['title'] = _editedProduct.title;
         _initValues['price'] = _editedProduct.price.toString();
         _initValues['description'] = _editedProduct.description;
-        // _initValues['imageUrl'] = _editedProduct.imageUrl;
         _initValues['imageUrl'] = '';
+        // _initValues = {
+        //   'title': _editedProduct.title,
+        //   'description': _editedProduct.description,
+        //   'price': _editedProduct.price.toString(),
+        //   // 'imageUrl': _editedProduct.imageUrl,
+        //   'imageUrl': '',
+        // };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
     }
@@ -82,55 +88,56 @@ class _EditProductsPageState extends State<EditProductsPage> {
 
   Future<void> _saveForm() async {
     final _isValid = _form.currentState.validate();
-    if (_isValid) {
-      _form.currentState.save();
-      setState(() {
-        _isLoading = true;
-      });
-      print(_editedProduct.title);
-      print(_editedProduct.description);
-      print(_editedProduct.price);
-      print(_editedProduct.imageUrl);
-      if (_editedProduct.id != null) {
-        await Provider.of<Products>(context, listen: false)
-            .editProduct(_editedProduct.id, _editedProduct);
-        // setState(() {
-        //   _isLoading = false;
-        // });
-        // Navigator.of(context).pop();
-      } else {
-        try {
-          await Provider.of<Products>(context, listen: false)
-              .addProduct(_editedProduct);
-        } catch (error) {
-          await showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: Text('An error occured'),
-              content: Text('something wrong happened in app'),
-              actions: [
-                FloatingActionButton(
-                  child: Text('Ok!!'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            ),
-          );
-        }
-        //  finally {
-        //   Navigator.of(context).pop();
-        //   setState(() {
-        //     _isLoading = false;
-        //   });
-        // }
-      }
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
+    if (!_isValid) {
+      return;
     }
+    _form.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+    print(_editedProduct.title);
+    print(_editedProduct.description);
+    print(_editedProduct.price);
+    print(_editedProduct.imageUrl);
+    if (_editedProduct.id != null) {
+      await Provider.of<Products>(context, listen: false)
+          .editProduct(_editedProduct.id, _editedProduct);
+      // setState(() {
+      //   _isLoading = false;
+      // });
+      // Navigator.of(context).pop();
+    } else {
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (error) {
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('An error occured'),
+            content: Text('something wrong happened in app'),
+            actions: [
+              FloatingActionButton(
+                child: Text('Ok!!'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ),
+        );
+      }
+      //  finally {
+      //   Navigator.of(context).pop();
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      // }
+    }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   @override
@@ -155,9 +162,7 @@ class _EditProductsPageState extends State<EditProductsPage> {
                   children: <Widget>[
                     TextFormField(
                       initialValue: _initValues['title'],
-                      decoration: InputDecoration(
-                        labelText: 'title',
-                      ),
+                      decoration: InputDecoration(labelText: 'title'),
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) {
                         FocusScope.of(context).requestFocus(_priceFocusNode);
@@ -179,9 +184,7 @@ class _EditProductsPageState extends State<EditProductsPage> {
                     ),
                     TextFormField(
                       initialValue: _initValues['price'],
-                      decoration: InputDecoration(
-                        labelText: 'price',
-                      ),
+                      decoration: InputDecoration(labelText: 'price'),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       focusNode: _priceFocusNode,
@@ -211,17 +214,13 @@ class _EditProductsPageState extends State<EditProductsPage> {
                     ),
                     TextFormField(
                       initialValue: _initValues['description'],
-                      decoration: InputDecoration(
-                        labelText: 'description',
-                      ),
+                      decoration: InputDecoration(labelText: 'description'),
                       maxLines: 3,
                       keyboardType: TextInputType.multiline,
-                      // textInputAction: TextInputAction.next,
-                      // focusNode: _priceFocusNode,
                       focusNode: _descriptionFocusNode,
                       validator: (value) {
                         if (value.isEmpty) return ('provide a descriptiom');
-                        if (value.length <= 10)
+                        if (value.length < 10)
                           return ('provide a description with more than 10 characters');
                         return null;
                       },
@@ -268,10 +267,23 @@ class _EditProductsPageState extends State<EditProductsPage> {
                             keyboardType: TextInputType.url,
                             textInputAction: TextInputAction.done,
                             controller: _imageUrlController,
+                            focusNode: _imageUrlFocusController,
                             onFieldSubmitted: (_) {
                               _saveForm();
                             },
                             validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter an image URL.';
+                              }
+                              if (!value.startsWith('http') &&
+                                  !value.startsWith('https')) {
+                                return 'Please enter a valid URL.';
+                              }
+                              if (!value.endsWith('.png') &&
+                                  !value.endsWith('.jpg') &&
+                                  !value.endsWith('.jpeg')) {
+                                return 'Please enter a valid image URL.';
+                              }
                               return null;
                             },
                             onSaved: (value) {

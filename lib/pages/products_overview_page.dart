@@ -35,11 +35,13 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Products>(context).fetchAndAddProducts();
+      Provider.of<Products>(context).fetchAndAddProducts().then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
-    setState(() {
-      _isLoading = false;
-    });
+
     _isInit = false;
     super.didChangeDependencies();
   }
@@ -52,7 +54,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
         actions: <Widget>[
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
-            itemBuilder: (ctx) => [
+            itemBuilder: (_) => [
               PopupMenuItem(
                 child: Text('Only favourites'),
                 // value: FilterOptions.Favourites,
@@ -64,9 +66,9 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
                 value: 1,
               )
             ],
-            onSelected: (int selected) {
+            onSelected: (int selectedValue) {
               setState(() {
-                if (selected == 0) {
+                if (selectedValue == 0) {
                   _onlyFavourites = true;
                   // print('marked afvourite');
                 } else {
@@ -76,14 +78,17 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             },
           ),
           Consumer<Cart>(
-            builder: (ctx, cartData, child) => Badge(
-              cchild: IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(CartPage.routeName);
-                },
-              ),
+            builder: (_, cartData, ch) => Badge(
+              cchild: ch,
               value: cartData.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartPage.routeName);
+              },
             ),
           ),
         ],

@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
 
-import '../providers/cart.dart';
+import '../providers/cart.dart' show Cart;
 import '../providers/orders.dart';
 import '../widgets/cart_product.dart';
-import '../widgets/app_drawer.dart';
 
 class CartPage extends StatelessWidget {
   static const routeName = '/cart';
@@ -16,7 +15,7 @@ class CartPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('your cart'),
       ),
-      drawer: AppDrawer(),
+      // drawer: AppDrawer(),
       body: Column(
         children: <Widget>[
           Card(
