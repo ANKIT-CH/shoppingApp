@@ -15,6 +15,7 @@ import './pages/user_products_page.dart';
 import './pages/edit_products_page.dart';
 import './pages/auth_page.dart';
 import './providers/auth.dart';
+import 'pages/splash_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) {},
           update: (ctx, authData, previousOrders) => Orders(
             authData.token,
+            authData.userId,
             previousOrders == null ? [] : previousOrders.orders,
           ),
         ),
@@ -56,7 +58,15 @@ class MyApp extends StatelessWidget {
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
           ),
-          home: authData.isAuth ? ProductsOverviewPage() : AuthPage(),
+          home: authData.isAuth
+              ? ProductsOverviewPage()
+              : FutureBuilder(
+                  future: authData.autoLoginAttemp(),
+                  builder: (ctx, snapshot) =>
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? SplashPage()
+                          : AuthPage(),
+                ),
           routes: {
             // '/': (context) => MyApp(),
 
