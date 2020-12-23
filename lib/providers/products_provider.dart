@@ -42,7 +42,8 @@ class Products with ChangeNotifier {
   ];
 
   final token;
-  Products(this.token, this._items);
+  final String userId;
+  Products(this.token, this.userId, this._items);
 
   List<Product> get favouriteItems {
     return _items.where((element) => element.isFavourite == true).toList();
@@ -56,8 +57,9 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchAndAddProducts() async {
-    final url =
+  Future<void> fetchAndAddProducts([bool isFilter = false]) async {
+    final filterText = isFilter ? 'orderBy="userId"&equalTo="$userId"' : "";
+    var url =
         'https://flutter-app-53158-default-rtdb.firebaseio.com/products.json?auth=$token';
     try {
       final response = await http.get(url);
@@ -65,16 +67,25 @@ class Products with ChangeNotifier {
       final List<Product> loadedProducts = [];
 
       if (extractedData == null) return;
+      url =
+          'https://flutter-app-53158-default-rtdb.firebaseio.com/userFavourites/$userId.json?auth=$token&$filterText';
+      final favResponse = await http.get(url);
 
       extractedData.forEach((prodId, product) {
-        loadedProducts.add(Product(
-          id: prodId,
-          title: product['title'],
-          description: product['description'],
-          price: product['price'],
-          imageUrl: product['imageUrl'],
-          isFavourite: product['isFavourite'],
-        ));
+        loadedProducts.add(
+          Product(
+            id: prodId,
+            title: product['title'],
+            description: product['description'],
+            price: product['price'],
+            imageUrl: product['imageUrl'],
+            isFavourite: json.decode(favResponse.body) == null
+                ? false
+                : json.decode(favResponse.body)[prodId]
+                    ? false
+                    : json.decode(favResponse.body)[prodId],
+          ),
+        );
       });
       _items = loadedProducts;
       notifyListeners();
@@ -96,7 +107,8 @@ class Products with ChangeNotifier {
             'description': product.description,
             'price': product.price,
             'imageUrl': product.imageUrl,
-            'isFavourite': product.isFavourite,
+            'userId': userId,
+            // 'isFavourite': product.isFavourite,
           },
         ),
       );

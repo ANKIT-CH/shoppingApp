@@ -22,6 +22,10 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get userId {
+    return _userId;
+  }
+
   Future<void> signUp(String email, String password) async {
     const url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDZdhiZf5ppnpoDekKno25I18ezGR74adk';
@@ -69,6 +73,14 @@ class Auth with ChangeNotifier {
       if (json.decode(response.body)['error'] != null) {
         throw HttpException(json.decode(response.body)['error']['message']);
       }
+      _token = json.decode(response.body)['idToken'];
+      _userId = json.decode(response.body)['localId'];
+      _expiryTime = DateTime.now().add(
+        Duration(
+          seconds: int.parse(json.decode(response.body)['expiresIn']),
+        ),
+      );
+      notifyListeners();
     } catch (error) {
       throw error;
     }

@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) {},
           update: (ctx, authData, previousProducts) => Products(
             authData.token,
+            authData.userId,
             previousProducts == null ? [] : previousProducts.items,
           ),
         ),
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
 
             ProductDetailPage.routeName: (ctx) => ProductDetailPage(),
             CartPage.routeName: (ctx) => CartPage(),
-            OrdersPage.routeName: (ctx) => CartPage(),
+            OrdersPage.routeName: (ctx) => OrdersPage(),
             UserProductsPage.routeName: (ctx) => UserProductsPage(),
             EditProductsPage.routeName: (ctx) => EditProductsPage(),
           },
