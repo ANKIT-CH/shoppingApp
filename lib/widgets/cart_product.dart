@@ -10,7 +10,13 @@ class CartProduct extends StatelessWidget {
   final double price;
   final int quantity;
 
-  CartProduct(this.id, this.prodId, this.title, this.price, this.quantity);
+  CartProduct(
+    this.id,
+    this.prodId,
+    this.title,
+    this.price,
+    this.quantity,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +45,8 @@ class CartProduct extends StatelessWidget {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('are you sure?'),
-            content: Text('do youwant to remove this product?'),
-            actions: [
+            content: Text('do you want to remove this product?'),
+            actions: <Widget>[
               FlatButton(
                   child: Text('YES'),
                   onPressed: () {
@@ -63,30 +69,19 @@ class CartProduct extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(8),
           child: ListTile(
-            leading: FittedBox(
+            leading: CircleAvatar(
               child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  child: Padding(
-                    padding: EdgeInsets.all(4),
-                    child: FittedBox(
-                      child: Text(
-                        '\$$price',
-                      ),
-                    ),
+                padding: EdgeInsets.all(4),
+                child: FittedBox(
+                  child: Text(
+                    '\$$price',
                   ),
                 ),
               ),
             ),
-            title: Text(
-              'title',
-            ),
-            subtitle: Text(
-              'total = \$${price * quantity}',
-            ),
-            trailing: Text(
-              '$quantity x',
-            ),
+            title: Text('title'),
+            subtitle: Text('total = \$${price * quantity}'),
+            trailing: Text('$quantity x'),
           ),
         ),
       ),

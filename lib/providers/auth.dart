@@ -34,7 +34,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signUp(String email, String password) async {
-    const url =
+    final url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDZdhiZf5ppnpoDekKno25I18ezGR74adk';
     try {
       final response = await http.post(
@@ -60,11 +60,13 @@ class Auth with ChangeNotifier {
       _autoLogout();
       notifyListeners();
       final pref = await SharedPreferences.getInstance();
-      final data = json.encode({
-        'token': _token,
-        'expiryTime': _expiryTime.toIso8601String(),
-        'userId': _userId,
-      });
+      final data = json.encode(
+        {
+          'token': _token,
+          'expiryTime': _expiryTime.toIso8601String(),
+          'userId': _userId,
+        },
+      );
       pref.setString('data', data);
     } catch (error) {
       throw error;
@@ -92,7 +94,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> logIn(String email, String password) async {
-    const url =
+    final url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDZdhiZf5ppnpoDekKno25I18ezGR74adk';
     try {
       final response = await http.post(
@@ -112,7 +114,9 @@ class Auth with ChangeNotifier {
       _userId = json.decode(response.body)['localId'];
       _expiryTime = DateTime.now().add(
         Duration(
-          seconds: int.parse(json.decode(response.body)['expiresIn']),
+          seconds: int.parse(
+            json.decode(response.body)['expiresIn'],
+          ),
         ),
       );
       _autoLogout();
@@ -135,13 +139,14 @@ class Auth with ChangeNotifier {
     final pref = await SharedPreferences.getInstance();
     // pref.remove('data');
     pref.clear();
-    notifyListeners();
+    // notifyListeners();
   }
 
   void _autoLogout() {
     if (_authTimer != null) {
       _authTimer.cancel();
     }
+    // final timeToExpiry = _expiryTime.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(
         Duration(seconds: _expiryTime.difference(DateTime.now()).inSeconds),
         logout);

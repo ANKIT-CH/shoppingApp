@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/widgets/app_drawer.dart';
 
+import '../widgets/app_drawer.dart';
 import '../widgets/Products_grid.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
@@ -23,12 +23,13 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   var _isInit = true;
   var _isLoading = false;
 
-  // @override
-  // void initState() {
-  //   Future.delayed(Duration.zero)
-  //       .then((value) => Provider.of<Products>(context).fetchAndAddProducts());
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    //   Future.delayed(Duration.zero)
+    //       .then((value) => Provider.of<Products>(context).fetchAndAddProducts());
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     if (_isInit) {

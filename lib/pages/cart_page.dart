@@ -8,6 +8,7 @@ import '../widgets/cart_product.dart';
 
 class CartPage extends StatelessWidget {
   static const routeName = '/cart';
+
   @override
   Widget build(BuildContext context) {
     final cartData = Provider.of<Cart>(context);
@@ -84,6 +85,7 @@ class OrderButton extends StatefulWidget {
 
 class _OrderButtonState extends State<OrderButton> {
   var _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return FlatButton(
@@ -92,9 +94,11 @@ class _OrderButtonState extends State<OrderButton> {
       onPressed: (widget.cartData.totalAmount <= 0 || _isLoading)
           ? null
           : () async {
-              setState(() {
-                _isLoading = true;
-              });
+              setState(
+                () {
+                  _isLoading = true;
+                },
+              );
               await Provider.of<Orders>(context, listen: false).addOrders(
                 widget.cartData.totalAmount,
                 widget.cartData.items.values.toList(),

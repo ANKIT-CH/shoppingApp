@@ -45,17 +45,17 @@ class _EditProductsPageState extends State<EditProductsPage> {
       if (productId != null) {
         _editedProduct =
             Provider.of<Products>(context, listen: false).findById(productId);
-        _initValues['title'] = _editedProduct.title;
-        _initValues['price'] = _editedProduct.price.toString();
-        _initValues['description'] = _editedProduct.description;
-        _initValues['imageUrl'] = '';
-        // _initValues = {
-        //   'title': _editedProduct.title,
-        //   'description': _editedProduct.description,
-        //   'price': _editedProduct.price.toString(),
-        //   // 'imageUrl': _editedProduct.imageUrl,
-        //   'imageUrl': '',
-        // };
+        // _initValues['title'] = _editedProduct.title;
+        // _initValues['price'] = _editedProduct.price.toString();
+        // _initValues['description'] = _editedProduct.description;
+        // _initValues['imageUrl'] = '';
+        _initValues = {
+          'title': _editedProduct.title,
+          'description': _editedProduct.description,
+          'price': _editedProduct.price.toString(),
+          // 'imageUrl': _editedProduct.imageUrl,
+          'imageUrl': '',
+        };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
     }
@@ -66,12 +66,12 @@ class _EditProductsPageState extends State<EditProductsPage> {
 
   void _updateImageUrl() {
     if (!_imageUrlFocusController.hasFocus) {
-      if (_imageUrlController.text.isEmpty) return;
-      if (!_imageUrlController.text.startsWith('http') &&
-          !_imageUrlController.text.startsWith('https')) return;
-      if (!_imageUrlController.text.endsWith('.png') &&
-          !_imageUrlController.text.endsWith('.jpg') &&
-          !_imageUrlController.text.endsWith('.jpeg')) return;
+      // if (_imageUrlController.text.isEmpty) return;
+      if ((!_imageUrlController.text.startsWith('http') &&
+              !_imageUrlController.text.startsWith('https')) ||
+          (!_imageUrlController.text.endsWith('.png') &&
+              !_imageUrlController.text.endsWith('.jpg') &&
+              !_imageUrlController.text.endsWith('.jpeg'))) return;
       setState(() {});
     }
   }
@@ -116,8 +116,8 @@ class _EditProductsPageState extends State<EditProductsPage> {
           builder: (ctx) => AlertDialog(
             title: Text('An error occured'),
             content: Text('something wrong happened in app'),
-            actions: [
-              FloatingActionButton(
+            actions: <Widget>[
+              FlatButton(
                 child: Text('Ok!!'),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -197,7 +197,7 @@ class _EditProductsPageState extends State<EditProductsPage> {
                         if (double.tryParse(value) == null)
                           return ('provide a valid number value');
                         if (double.parse(value) <= 0)
-                          return ('provide a valid number > 0');
+                          return ('provide a valid number larger than 0');
 
                         return null;
                       },
@@ -237,13 +237,13 @@ class _EditProductsPageState extends State<EditProductsPage> {
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
+                      children: <Widget>[
                         Container(
                           height: 120,
                           width: 120,
                           margin: EdgeInsets.only(
-                            right: 5,
-                            top: 5,
+                            right: 7,
+                            top: 9,
                           ),
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -255,9 +255,10 @@ class _EditProductsPageState extends State<EditProductsPage> {
                             child: _imageUrlController.text.isEmpty
                                 ? Text('Enter Image URL')
                                 : FittedBox(
-                                    child:
-                                        Image.network(_imageUrlController.text),
-                                    fit: BoxFit.cover,
+                                    child: Image.network(
+                                      _imageUrlController.text,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                           ),
                         ),

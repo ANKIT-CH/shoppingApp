@@ -106,7 +106,7 @@ class _AuthCardState extends State<AuthCard>
   final _passwordController = TextEditingController();
 
   AnimationController _animationController;
-  Animation<Size> _heightAnimation;
+  // Animation<Size> _heightAnimation;
   Animation<double> _opacityAnimation;
   Animation<Offset> _slideAnimation;
 
@@ -119,15 +119,15 @@ class _AuthCardState extends State<AuthCard>
       duration: Duration(milliseconds: 500),
     );
 
-    _heightAnimation = Tween<Size>(
-      begin: Size(double.infinity, 260),
-      end: Size(double.infinity, 320),
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.linear,
-      ),
-    );
+    // _heightAnimation = Tween<Size>(
+    //   begin: Size(double.infinity, 260),
+    //   end: Size(double.infinity, 320),
+    // ).animate(
+    //   CurvedAnimation(
+    //     parent: _animationController,
+    //     curve: Curves.linear,
+    //   ),
+    // );
     _opacityAnimation = Tween(
       begin: 0.0,
       end: 1.0,
@@ -143,7 +143,7 @@ class _AuthCardState extends State<AuthCard>
     ).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Curves.linear,
+        curve: Curves.easeIn,
       ),
     );
     // _heightAnimation.addListener(() => setState(() {}));
@@ -199,7 +199,7 @@ class _AuthCardState extends State<AuthCard>
       if (error.toString().contains('EMAIL_EXISTS')) {
         errorMessage = 'this email is already registered';
       } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = 'this email is imvalid, use another email';
+        errorMessage = 'this email is invalid, use another email';
       } else if (error.toString().contains('WEAK_PASSWORD')) {
         errorMessage = 'this password is weak, use stonger password';
       } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
@@ -329,7 +329,8 @@ class _AuthCardState extends State<AuthCard>
                   ),
                 FlatButton(
                   child: Text(
-                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                    '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD',
+                  ),
                   onPressed: _switchAuthMode,
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

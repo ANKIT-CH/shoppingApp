@@ -9,7 +9,7 @@ class SplashPage extends StatelessWidget {
           'Loading...',
           style: TextStyle(
             color: Colors.deepPurple,
-            fontSize: 20,
+            fontSize: 40,
           ),
         ),
       ),

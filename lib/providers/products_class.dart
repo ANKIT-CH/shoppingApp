@@ -1,5 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
@@ -26,10 +27,12 @@ class Product with ChangeNotifier {
     final url =
         'https://flutter-app-53158-default-rtdb.firebaseio.com/userFavourites/$userId/$id.json?auth=$token';
     try {
-      final response = await http.put(url,
-          body: json.encode(
-            isFavourite,
-          ));
+      final response = await http.put(
+        url,
+        body: json.encode(
+          isFavourite,
+        ),
+      );
       if (response.statusCode >= 400) {
         isFavourite = oldFavourite;
         // notifyListeners();

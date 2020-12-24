@@ -1,11 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:math';
 
 import '../providers/orders.dart' as ord;
 
 class OrderItem extends StatefulWidget {
   final ord.OrderItem orders;
+
   OrderItem(this.orders);
 
   @override
@@ -16,31 +18,39 @@ class _OrderItemState extends State<OrderItem> {
   bool _expanded = false;
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            title: Text('\$${widget.orders.amount}'),
-            subtitle: Text(
-              DateFormat('dd MM yyyy hh:mm').format(widget.orders.dateTime),
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      height: _expanded
+          ? min(widget.orders.products.length * 25.0 + 110.0, 200.0)
+          : 100,
+      child: Card(
+        margin: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              title: Text('\$${widget.orders.amount}'),
+              subtitle: Text(
+                DateFormat('dd MM yyyy hh:mm').format(widget.orders.dateTime),
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.expand_more),
+                onPressed: () {
+                  setState(() {
+                    _expanded = !_expanded;
+                  });
+                },
+              ),
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.expand_more),
-              onPressed: () {
-                setState(() {
-                  _expanded = !_expanded;
-                });
-              },
-            ),
-          ),
-          if (_expanded)
-            Container(
+            // if (_expanded)
+            AnimatedContainer(
+              duration: Duration(milliseconds: 500),
               padding: EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 5,
               ),
-              height: min(widget.orders.products.length * 25.0 + 10.0, 300.0),
+              height: _expanded
+                  ? min(widget.orders.products.length * 25.0 + 10.0, 100.0)
+                  : 0,
               child: ListView(
                 children: widget.orders.products
                     .map(
@@ -68,7 +78,8 @@ class _OrderItemState extends State<OrderItem> {
                     .toList(),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }

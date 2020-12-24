@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'products_class.dart';
 import '../models/http_exception.dart';
+import 'products_class.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -41,8 +42,9 @@ class Products with ChangeNotifier {
     // ),
   ];
 
-  final token;
+  final String token;
   final String userId;
+
   Products(this.token, this.userId, this._items);
 
   List<Product> get favouriteItems {
@@ -58,9 +60,9 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndAddProducts([bool isFilter = false]) async {
-    final filterText = isFilter ? 'orderBy="userId"&equalTo="$userId"' : "";
+    final filterText = isFilter ? 'orderBy="userId"&equalTo="$userId"' : '';
     var url =
-        'https://flutter-app-53158-default-rtdb.firebaseio.com/products.json?auth=$token';
+        'https://flutter-app-53158-default-rtdb.firebaseio.com/products.json?auth=$token&$filterText';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -68,7 +70,7 @@ class Products with ChangeNotifier {
 
       if (extractedData == null) return;
       url =
-          'https://flutter-app-53158-default-rtdb.firebaseio.com/userFavourites/$userId.json?auth=$token&$filterText';
+          'https://flutter-app-53158-default-rtdb.firebaseio.com/userFavourites/$userId.json?auth=$token';
       final favResponse = await http.get(url);
 
       extractedData.forEach((prodId, product) {
@@ -134,16 +136,18 @@ class Products with ChangeNotifier {
       final url =
           'https://flutter-app-53158-default-rtdb.firebaseio.com/products/$id.json?auth=$token';
 
-      await http.patch(url,
-          body: json.encode(
-            {
-              'title': newProduct.title,
-              'description': newProduct.description,
-              'price': newProduct.price,
-              'imageUrl': newProduct.imageUrl,
-              // 'isFavourite': product.isFavourite,
-            },
-          ));
+      await http.patch(
+        url,
+        body: json.encode(
+          {
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'price': newProduct.price,
+            'imageUrl': newProduct.imageUrl,
+            // 'isFavourite': product.isFavourite,
+          },
+        ),
+      );
       _items[productId] = newProduct;
       notifyListeners();
     } else
@@ -162,7 +166,7 @@ class Products with ChangeNotifier {
 
     final response = await http.delete(url);
     if (response.statusCode >= 400) {
-      _items.add(existingProduct);
+      _items.insert(existingProductId, existingProduct);
       notifyListeners();
       throw HttpException('unable to delete this item');
     }

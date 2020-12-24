@@ -88,10 +88,10 @@ class Cart with ChangeNotifier {
         // {() {return;}},
       );
     } else
-      removeItem(id);
+      _items.remove(id);
 
     notifyListeners();
   }
 
-  notifyListeners();
+  // notifyListeners();
 }

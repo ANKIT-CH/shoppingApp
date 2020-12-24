@@ -14,17 +14,29 @@ class ProductItem extends StatelessWidget {
   // ProductItem(this.title, this.id, this.imageUrl);
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context, listen: false);
-    final cart = Provider.of<Cart>(context, listen: false);
-    final auth = Provider.of<Auth>(context);
+    final product = Provider.of<Product>(
+      context,
+      listen: false,
+    );
+    final cart = Provider.of<Cart>(
+      context,
+      listen: false,
+    );
+    final auth = Provider.of<Auth>(
+      context,
+      listen: false,
+    );
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
-          child: FadeInImage(
-            placeholder: AssetImage('assets/images/product-placeholder.png'),
-            image: NetworkImage(product.imageUrl),
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
           //  Image.network(
           //   product.imageUrl,
@@ -40,18 +52,17 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
-              builder: (ctx, product, child) => IconButton(
-                    icon: Icon(
-                      product.isFavourite
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                    ),
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {
-                      product.toggleFavourite(auth.token, auth.userId);
-                      print('set as favourite');
-                    },
-                  )),
+            builder: (ctx, product, _) => IconButton(
+              icon: Icon(
+                product.isFavourite ? Icons.favorite : Icons.favorite_border,
+              ),
+              color: Theme.of(context).accentColor,
+              onPressed: () {
+                product.toggleFavourite(auth.token, auth.userId);
+                print('set as favourite');
+              },
+            ),
+          ),
           title: Text(
             product.title,
             textAlign: TextAlign.center,
