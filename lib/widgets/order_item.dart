@@ -19,7 +19,7 @@ class _OrderItemState extends State<OrderItem> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 200),
       height: _expanded
           ? min(widget.orders.products.length * 25.0 + 110.0, 200.0)
           : 100,
@@ -43,7 +43,7 @@ class _OrderItemState extends State<OrderItem> {
             ),
             // if (_expanded)
             AnimatedContainer(
-              duration: Duration(milliseconds: 500),
+              duration: Duration(milliseconds: 200),
               padding: EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 5,

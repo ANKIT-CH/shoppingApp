@@ -83,9 +83,7 @@ class Products with ChangeNotifier {
             imageUrl: product['imageUrl'],
             isFavourite: json.decode(favResponse.body) == null
                 ? false
-                : json.decode(favResponse.body)[prodId]
-                    ? false
-                    : json.decode(favResponse.body)[prodId],
+                : json.decode(favResponse.body)[prodId] ?? false,
           ),
         );
       });
